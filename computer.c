@@ -230,16 +230,50 @@ unsigned int Fetch(int addr)
 void rDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 {
     //r-type inst format: opcode: 31-26 (6); rs: 25-21 (5); rt: 20-16 (5); rd: 15-11 (5); shamt: 10-6 (5); funct: 5-0 (6)
+    unsigned int clone = instr;
+    //funct
+    clone = clone << 26;
+    d->r->funct = clone >> 26;
+    //rs
+    clone = instr;
+    clone = clone << 6;
+    d->r->rs = clone >> 27;
+    rVals->R_rs = d->r->rs;
+    //rt
+    clone = instr;
+    clone = clone << 11;
+    d->r->rt = clone >> 27;
+    rVals->R_rt = d->r->rt;
+    //rd
+    clone = instr;
+    clone = clone << 16;
+    d->r->rd = clone >> 27;
+    rVals->R_rd = d->r->rd;
+    //shamt
+    clone = instr;
+    clone = clone << 21;
+    d->r->shamt = clone >> 27;
 }
 
 void iDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 {
     //i-type inst format: opcode: 31-26 (6); rs: 25-21 (5); rt: 20-16 (5); immediate: 15-0 (16)
-}
+    unsigned int clone = instr;
+    //rs
+    clone = instr;
+    clone = clone << 6;
+    d->i->rs = clone >> 27;
+    rVals->R_rs = d->i->rs;
+    //rt
+    clone = instr;
+    clone = clone << 11;
+    d->i->rt = clone >> 27;
+    rVals->R_rt = d->i->rt;
+    //imm
+    clone = instr;
+    clone = clone << 6;
+    d->i->addr_or_immed = clone >> 27;
 
-void jDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
-{
-    //j-type inst format: opcode: 31-26 (6); address: 25-0 (26)
 }
 
 
@@ -248,7 +282,7 @@ void jDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 /* Decode instr, returning decoded instruction. */
 void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVals /*register values*/)
 {
-    unsigned int opcode = inst;
+    unsigned int opcode = instr;
     d->op = opcode >> 26;
 
     switch (d->op)
@@ -297,19 +331,22 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
         case 0x2:   
         {
             //j
-            jDecode (instr, d, rVals);
+            unsigned int targ = instr << 6;
+            d->j->target = targ >> 6;
             break;
         }
         case 0x3:   
         {
             //jal
-            jDecode (instr, d, rVals);
+            unsigned int targ = instr << 6;
+            d->j->target = targ >> 6;
             break;
         }
         case 0x8:   
         {
             //jr
-            jDecode (instr, d, rVals);
+            unsigned int targ = instr << 6;
+            d->j->target = targ >> 6;
             break;
         }
     }
