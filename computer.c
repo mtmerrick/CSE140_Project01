@@ -227,16 +227,19 @@ unsigned int Fetch(int addr)
     return mips.memory[(addr - 0x00400000) / 4];
 }
 
-void rDecode(unsigned int instr, DecodedInstr *d)
+void rDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 {
+    //r-type inst format: opcode: 31-26 (6); rs: 25-21 (5); rt: 20-16 (5); rd: 15-11 (5); shamt: 10-6 (5); funct: 5-0 (6)
 }
 
-void iDecode(unsigned int instr, DecodedInstr *d)
+void iDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 {
+    //i-type inst format: opcode: 31-26 (6); rs: 25-21 (5); rt: 20-16 (5); immediate: 15-0 (16)
 }
 
-void jDecode(unsigned int instr, DecodedInstr *d)
+void jDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 {
+    //j-type inst format: opcode: 31-26 (6); address: 25-0 (26)
 }
 
 
@@ -252,52 +255,61 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
     {
         case 0x0:
         {
-            //r format
+            rDecode (instr, d, rVals);
             break;
         }
         case 0x9:   
         {
             //addiu
+            iDecode (instr, d, rVals);
             break;
         }
         case 0xc:   
         {
             //andi
+            iDecode (instr, d, rVals);
             break;
         }
         case 0xd:   
         {
             //ori
+            iDecode (instr, d, rVals);
             break;
         }
         case 0xf:   
         {
             //lui
+            iDecode (instr, d, rVals);
             break;
         }
         case 0x23:   
         {
             //lw
+            iDecode (instr, d, rVals);
             break;
         }
         case 0x2b:   
         {
             //sw
+            iDecode (instr, d, rVals);
             break;
         }
         case 0x2:   
         {
             //j
+            jDecode (instr, d, rVals);
             break;
         }
         case 0x3:   
         {
             //jal
+            jDecode (instr, d, rVals);
             break;
         }
         case 0x8:   
         {
             //jr
+            jDecode (instr, d, rVals);
             break;
         }
     }
