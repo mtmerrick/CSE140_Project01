@@ -230,6 +230,7 @@ unsigned int Fetch(int addr)
 void rDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 {
     //r-type inst format: opcode: 31-26 (6); rs: 25-21 (5); rt: 20-16 (5); rd: 15-11 (5); shamt: 10-6 (5); funct: 5-0 (6)
+    d->type = R;
     unsigned int clone = instr;
     //funct
     clone = clone << 26;
@@ -258,6 +259,7 @@ void rDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 void iDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 {
     //i-type inst format: opcode: 31-26 (6); rs: 25-21 (5); rt: 20-16 (5); immediate: 15-0 (16)
+    d->type = I;
     unsigned int clone = instr;
     //rs
     clone = instr;
@@ -331,6 +333,7 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
         case 0x2:   
         {
             //j
+            d->type = J;
             unsigned int targ = instr << 6;
             d->j->target = targ >> 6;
             break;
@@ -338,6 +341,7 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
         case 0x3:   
         {
             //jal
+            d->type = J;
             unsigned int targ = instr << 6;
             d->j->target = targ >> 6;
             break;
@@ -345,6 +349,7 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
         case 0x8:   
         {
             //jr
+            d->type = J;
             unsigned int targ = instr << 6;
             d->j->target = targ >> 6;
             break;
@@ -359,6 +364,121 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
 void PrintInstruction(DecodedInstr *d)
 {
     /* Your code goes here */
+    switch (d->op)
+    {
+        case 0x0:
+        {
+            //r-type
+            switch(d->r->funct)
+            {
+                case 0x21:
+                {
+                    cout<<"addu \t";
+                    break;
+                }
+                    
+                case 0x23:
+                {
+                    cout<<"subu \t";
+                    break;
+                }
+                case 0x0:
+                {
+                    cout<<"sll \t";
+                    break;
+                }
+                case 0x2:
+                {
+                    cout<<"srl \t";
+                    break;
+                }
+                case 0x24:
+                {
+                    cout<<"and \t";
+                    break;
+                }
+                case 0x25:
+                {
+                    cout<<"or \t";
+                    break;
+                }
+                case 0x2a:
+                {
+                    cout<<"slt \t";
+                    break;
+                }
+                case 0x4:
+                {
+                    cout<<"beq \t";
+                    break;
+                }
+                case 0x5:
+                {
+                    cout<<"bne \t";
+                }
+            }
+            break;
+        }
+        case 0x9:   
+        {
+            cout<<"addiu \t";
+            break;
+        }
+        case 0xc:   
+        {
+            cout<<"andi \t";
+            break;
+        }
+        case 0xd:   
+        {
+            cout<<"ori \t";
+            break;
+        }
+        case 0xf:   
+        {
+            cout<<"lui \t";
+            break;
+        }
+        case 0x23:   
+        {
+            cout<<"lw \t";
+            break;
+        }
+        case 0x2b:   
+        {
+            cout<<"sw \t";
+            break;
+        }
+        case 0x2:   
+        {
+            cout<<"j \t";
+            break;
+        }
+        case 0x3:   
+        {
+            cout<<"jal \t";
+            break;
+        }
+        case 0x8:   
+        {
+            cout<<"jr \t";
+        }
+    }
+    switch(d->type)
+    {
+        case R:
+        {
+            cout<<"$"<<d->r->rd<<", $"<<d->r->rs<<", $"<<d->r->rt<<endl;
+        }
+        case I:
+        {
+            cout<<"$"<<d->i->rt<<", $"<<d->i->rs<<", "<<d->i->addr_or_immed<<endl;
+        }
+        case J:
+        {
+            cout<<d->j->target<<endl;
+        }
+    }
 }
 
 /* Perform computation needed to execute d, returning computed value */
@@ -377,6 +497,15 @@ void UpdatePC(DecodedInstr *d, int val)
 {
     mips.pc += 4;
     /* Your code goes here */
+    switch(d->type)
+    {
+        case J:
+        {
+
+        }
+        case default:
+        {}
+    }
 }
 
 /*
