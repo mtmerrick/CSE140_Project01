@@ -373,95 +373,95 @@ void PrintInstruction(DecodedInstr *d)
             {
                 case 0x21:
                 {
-                    cout<<"addu \t";
+                    cout<<"addu"<<\t;
                     break;
                 }
                     
                 case 0x23:
                 {
-                    cout<<"subu \t";
+                    cout<<"subu"<<\t;
                     break;
                 }
                 case 0x0:
                 {
-                    cout<<"sll \t";
+                    cout<<"sll"<<\t;
                     break;
                 }
                 case 0x2:
                 {
-                    cout<<"srl \t";
+                    cout<<"srl"<<\t;
                     break;
                 }
                 case 0x24:
                 {
-                    cout<<"and \t";
+                    cout<<"and"<<\t;
                     break;
                 }
                 case 0x25:
                 {
-                    cout<<"or \t";
+                    cout<<"or"<<\t;
                     break;
                 }
                 case 0x2a:
                 {
-                    cout<<"slt \t";
+                    cout<<"slt"<<\t;
                     break;
                 }
                 case 0x4:
                 {
-                    cout<<"beq \t";
+                    cout<<"beq"<<\t;
                     break;
                 }
                 case 0x5:
                 {
-                    cout<<"bne \t";
+                    cout<<"bne"<<\t;
                 }
             }
             break;
         }
         case 0x9:   
         {
-            cout<<"addiu \t";
+            cout<<"addiu"<<\t;
             break;
         }
         case 0xc:   
         {
-            cout<<"andi \t";
+            cout<<"andi"<<\t;
             break;
         }
         case 0xd:   
         {
-            cout<<"ori \t";
+            cout<<"ori"<<\t;
             break;
         }
         case 0xf:   
         {
-            cout<<"lui \t";
+            cout<<"lui"<<\t;
             break;
         }
         case 0x23:   
         {
-            cout<<"lw \t";
+            cout<<"lw"<<\t;
             break;
         }
         case 0x2b:   
         {
-            cout<<"sw \t";
+            cout<<"sw"<<\t;
             break;
         }
         case 0x2:   
         {
-            cout<<"j \t";
+            cout<<"j"<<\t;
             break;
         }
         case 0x3:   
         {
-            cout<<"jal \t";
+            cout<<"jal"<<\t;
             break;
         }
         case 0x8:   
         {
-            cout<<"jr \t";
+            cout<<"jr"<<\t;
         }
     }
     switch(d->type)
@@ -501,7 +501,7 @@ void UpdatePC(DecodedInstr *d, int val)
     {
         case J:
         {
-
+            
         }
         case default:
         {}
