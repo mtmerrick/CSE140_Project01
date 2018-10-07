@@ -346,14 +346,6 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
             d->j->target = targ >> 6;
             break;
         }
-        case 0x8:   
-        {
-            //jr
-            d->type = J;
-            unsigned int targ = instr << 6;
-            d->j->target = targ >> 6;
-            break;
-        }
     }
 }
 
@@ -416,6 +408,10 @@ void PrintInstruction(DecodedInstr *d)
                 {
                     cout<<"bne"<<\t;
                 }
+                case 0x8:   
+                {
+                    cout<<"jr"<<\t;
+                }
             }
             break;
         }
@@ -459,10 +455,6 @@ void PrintInstruction(DecodedInstr *d)
             cout<<"jal"<<\t;
             break;
         }
-        case 0x8:   
-        {
-            cout<<"jr"<<\t;
-        }
     }
     switch(d->type)
     {
@@ -501,7 +493,23 @@ void UpdatePC(DecodedInstr *d, int val)
     {
         case J:
         {
+            switch(d->op){
+                case 0x3:   
+                {
+                    //jal
+                    Computer->registers[30] = Computer->pc;
+                    break;
+                }
+            }
+            Computer->pc = d->j->target;
             
+        }
+        case R:
+        {
+            //jr
+            if(d->funct == 0x8){
+                Computer->pc = d->r->rs;
+            }
         }
         case default:
         {}
