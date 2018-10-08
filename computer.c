@@ -381,43 +381,43 @@ void PrintInstruction(DecodedInstr *d)
 			{
 				case 0x21:
 				{
-					std::cout<<"addu \t";
+					printf("%s \t", addu);
 					break;
 				}
 					
 				case 0x23:
 				{
-					std::cout<<"subu \t";
+					printf("%s \t", subu);
 					break;
 				}
 				case 0x0:
 				{
-					std::cout<<"sll \t";
+					printf("%s \t", sll);
 					break;
 				}
 				case 0x2:
 				{
-					std::cout<<"srl \t";
+					printf("%s \t", srl);
 					break;
 				}
 				case 0x24:
 				{
-					std::cout<<"and \t";
+					printf("%s \t", and);
 					break;
 				}
 				case 0x25:
 				{
-					std::cout<<"or \t";
+					printf("%s \t", or);
 					break;
 				}
 				case 0x2a:
 				{
-					std::cout<<"slt \t";
+					printf("%s \t", slt);
 					break;
 				}
 				case 0x4:
 				{
-					std::cout<<"beq \t";
+					printf("%s \t", beq);
 					break;
 				}
 				default:
@@ -427,51 +427,51 @@ void PrintInstruction(DecodedInstr *d)
 		}
 		case 0x9:   
 		{
-			std::cout<<"addiu \t";
+			printf("%s \t", addiu);
 			break;
 		}
 		case 0xc:   
 		{
-			std::cout<<"andi \t";
+			printf("%s \t", andi);
 			break;
 		}
 		case 0xd:   
 		{
-			std::cout<<"ori \t";
+			printf("%s \t", ori);
 			break;
 		}
 		case 0xf:   
 		{
-			std::cout<<"lui \t";
+			printf("%s \t", lui);
 			break;
 		}
 		case 0x23:   
 		{
-			std::cout<<"lw \t";
+			printf("%s \t", lw);
 			break;
 		}
 		case 0x2b:   
 		{
-			std::cout<<"sw \t";
+			printf("%s \t", sw);
 			break;
 		}
 		case 0x2:   
 		{
-			std::cout<<"j \t";
+			printf("%s \t", j);
 			break;
 		}
 		case 0x3:   
 		{
-			std::cout<<"jal \t";
+			printf("%s \t", jal);
 			break;
 		}
 		case 0x5:
 		{
-			std::cout<<"bne \t";
+			printf("%s \t", bne);
 		}
 		case 0x8:   
 		{
-			std::cout<<"jr \t";
+			printf("%s \t", jr);
 		}
 		default:
 		{}
@@ -480,15 +480,15 @@ void PrintInstruction(DecodedInstr *d)
 	{
 		case R:
 		{
-			std::cout<<"$"<<d->regs.r.rd<<", $"<<d->regs.r.rs<<", $"<<d->regs.r.rt<<std::endl;
+			printf("%s%d%s%d%s%d\n", "$", d->regs.r.rd, ", $", d->regs.r.rs, ", $", d->regs.r.rt);
 		}
 		case I:
 		{
-			std::cout<<"$"<<d->regs.i.rt<<", $"<<d->regs.i.rs<<", "<<d->regs.i.addr_or_immed<<std::endl;
+			printf("%s%d%s%d%s%d\n", "$", d->regs.i.rt, ", $", d->regs.i.rs, ", ", d->regs.i.addr_or_immed);
 		}
 		case J:
 		{
-			std::cout<<d->regs.j.target<<std::endl;
+			printf("%d\n", d->regs.j.target);
 		}
 		default:
 		{}
@@ -507,44 +507,44 @@ int Execute(DecodedInstr *d, RegVals *rVals)
             {
                 case 0x21:
                 {
-                    // std::cout<<"addu \t";
+                    // addu
 					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] + mips.registers[d->regs.r.rt];
                     break;
                 }
                     
                 case 0x23:
                 {
-                    // std::cout<<"subu \t";
+                    // subu
 					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] - mips.registers[d->regs.r.rt];
                     break;
                 }
                 case 0x0:
                 {
-                    // std::cout<<"sll \t";
+                    // sll
 					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] << mips.registers[d->regs.r.shamt;
                     break;
                 }
                 case 0x2:
                 {
-                    // std::cout<<"srl \t";
+                    // srl
 					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] >> mips.registers[d->regs.r.shamt;
                     break;
                 }
                 case 0x24:
                 {
-                    // std::cout<<"and \t";
+                    // and
 					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] & mips.registers[d->regs.r.rt];
                     break;
                 }
                 case 0x25:
                 {
-                    // std::cout<<"or \t";
+                    // or
 					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] | mips.registers[d->regs.r.rt];
                     break;
                 }
                 case 0x2a:
                 {
-                    // std::cout<<"slt \t";
+                    // slt
 					mips.registers[d->regs.r.rd] = (mips.registers[d->regs.r.rs] < mips.registers[d->regs.r.rt])?1:0;
                     break;
                 }
@@ -555,37 +555,37 @@ int Execute(DecodedInstr *d, RegVals *rVals)
         }
         case 0x9:   
         {
-            // std::cout<<"addiu \t";
+            // addiu
 			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
             break;
         }
         case 0xc:   
         {
-            // std::cout<<"andi \t";
+            // andi
 			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] & d->regs.i.addr_or_immed;
             break;
         }
         case 0xd:   
         {
-            // std::cout<<"ori \t";
+            // ori
 			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] | d->regs.i.addr_or_immed;
             break;
         }
         case 0xf:   
         {
-            // std::cout<<"lui \t";
+            // lui
 			mips.registers[d->regs.i.rt] = d->regs.i.addr_or_immed << 16;
             break;
         }
         case 0x23:   
         {
-            // std::cout<<"lw \t";
+            // lw
 			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
             break;
         }
         case 0x2b:   
         {
-            // std::cout<<"sw \t";
+            // sw
 			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
             break;
         }
