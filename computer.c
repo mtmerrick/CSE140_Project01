@@ -1,10 +1,11 @@
+// using namespace std;
 #include <stdio.h>
 #include <stdlib.h>
 #include <netinet/in.h>
 #include "computer.h"
 // #include <iostream>
 #undef mips /* gcc already has a def for mips */
-using namespace std;
+
 
 unsigned int endianSwap(unsigned int);
 
@@ -237,26 +238,26 @@ void rDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 	unsigned int clone = instr;
 	//funct
 	clone = clone << 26;
-	d->regs.r->funct = clone >> 26;
+	d->regs.r.funct = clone >> 26;
 	//rs
 	clone = instr;
 	clone = clone << 6;
-	d->regs.r->rs = clone >> 27;
-	rVals->R_rs = d->regs.r->rs;
+	d->regs.r.rs = clone >> 27;
+	rVals->R_rs = d->regs.r.rs;
 	//rt
 	clone = instr;
 	clone = clone << 11;
-	d->regs.r->rt = clone >> 27;
-	rVals->R_rt = d->regs.r->rt;
+	d->regs.r.rt = clone >> 27;
+	rVals->R_rt = d->regs.r.rt;
 	//rd
 	clone = instr;
 	clone = clone << 16;
-	d->regs.r->rd = clone >> 27;
-	rVals->R_rd = d->regs.r->rd;
+	d->regs.r.rd = clone >> 27;
+	rVals->R_rd = d->regs.r.rd;
 	//shamt
 	clone = instr;
 	clone = clone << 21;
-	d->regs.r->shamt = clone >> 27;
+	d->regs.r.shamt = clone >> 27;
 }
 
 void iDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
@@ -267,17 +268,17 @@ void iDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 	//rs
 	clone = instr;
 	clone = clone << 6;
-	d->regs.i->rs = clone >> 27;
-	rVals->R_rs = d->regs.i->rs;
+	d->regs.i.rs = clone >> 27;
+	rVals->R_rs = d->regs.i.rs;
 	//rt
 	clone = instr;
 	clone = clone << 11;
-	d->regs.i->rt = clone >> 27;
-	rVals->R_rt = d->regs.i->rt;
+	d->regs.i.rt = clone >> 27;
+	rVals->R_rt = d->regs.i.rt;
 	//imm
 	clone = instr;
 	clone = clone << 6;
-	d->regs.i->addr_or_immed = clone >> 27;
+	d->regs.i.addr_or_immed = clone >> 27;
 
 }
 
@@ -338,7 +339,7 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
 			//j
 			d->type = J;
 			unsigned int targ = instr << 6;
-			d->regs.j->target = targ >> 6;
+			d->regs.j.target = targ >> 6;
 			break;
 		}
 		case 0x3:   
@@ -346,7 +347,7 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
 			//jal
 			d->type = J;
 			unsigned int targ = instr << 6;
-			d->regs.j->target = targ >> 6;
+			d->regs.j.target = targ >> 6;
 			break;
 		}
 		case 0x4:
@@ -359,7 +360,7 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
 			//bne
 			iDecode (instr, d, rVals);
 		}
-		case default:
+		default:
 		{}
 	}
 }
@@ -376,7 +377,7 @@ void PrintInstruction(DecodedInstr *d)
 		case 0x0:
 		{
 			//r-type
-			switch(d->regs.r->funct)
+			switch(d->regs.r.funct)
 			{
 				case 0x21:
 				{
@@ -419,7 +420,7 @@ void PrintInstruction(DecodedInstr *d)
 					cout<<"beq \t";
 					break;
 				}
-				case default:
+				default:
 				{}
 			}
 			break;
@@ -472,24 +473,24 @@ void PrintInstruction(DecodedInstr *d)
 		{
 			cout<<"jr \t";
 		}
-		case default:
+		default:
 		{}
 	}
 	switch(d->type)
 	{
 		case R:
 		{
-			cout<<"$"<<d->regs.r->rd<<", $"<<d->regs.r->rs<<", $"<<d->regs.r->rt<<endl;
+			cout<<"$"<<d->regs.r.rd<<", $"<<d->regs.r.rs<<", $"<<d->regs.r.rt<<endl;
 		}
 		case I:
 		{
-			cout<<"$"<<d->regs.i->rt<<", $"<<d->regs.i->rs<<", "<<d->regs.i->addr_or_immed<<endl;
+			cout<<"$"<<d->regs.i.rt<<", $"<<d->regs.i.rs<<", "<<d->regs.i.addr_or_immed<<endl;
 		}
 		case J:
 		{
-			cout<<d->regs.j->target<<endl;
+			cout<<d->regs.j.target<<endl;
 		}
-		case default:
+		default:
 		{}
 	}
 }
@@ -502,52 +503,52 @@ int Execute(DecodedInstr *d, RegVals *rVals)
         case 0x0:
         {
             //r-type
-            switch(d->regs.r->funct)
+            switch(d->regs.r.funct)
             {
                 case 0x21:
                 {
                     // cout<<"addu \t";
-					mips.registers[d->regs.r->rd] = mips.registers[d->regs.r->rs] + mips.registers[d->regs.r->rt];
+					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] + mips.registers[d->regs.r.rt];
                     break;
                 }
                     
                 case 0x23:
                 {
                     // cout<<"subu \t";
-					mips.registers[d->regs.r->rd] = mips.registers[d->regs.r->rs] - mips.registers[d->regs.r->rt];
+					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] - mips.registers[d->regs.r.rt];
                     break;
                 }
                 case 0x0:
                 {
                     // cout<<"sll \t";
-					mips.registers[d->regs.r->rd] = mips.registers[d->regs.r->rs] << mips.registers[d->regs.r->sh]amt;
+					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] << mips.registers[d->regs.r.sh]amt;
                     break;
                 }
                 case 0x2:
                 {
                     // cout<<"srl \t";
-					mips.registers[d->regs.r->rd] = mips.registers[d->regs.r->rs] >> mips.registers[d->regs.r->sh]amt;
+					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] >> mips.registers[d->regs.r.sh]amt;
                     break;
                 }
                 case 0x24:
                 {
                     // cout<<"and \t";
-					mips.registers[d->regs.r->rd] = mips.registers[d->regs.r->rs] & mips.registers[d->regs.r->rt];
+					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] & mips.registers[d->regs.r.rt];
                     break;
                 }
                 case 0x25:
                 {
                     // cout<<"or \t";
-					mips.registers[d->regs.r->rd] = mips.registers[d->regs.r->rs] | mips.registers[d->regs.r->rt];
+					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] | mips.registers[d->regs.r.rt];
                     break;
                 }
                 case 0x2a:
                 {
                     // cout<<"slt \t";
-					mips.registers[d->regs.r->rd] = (mips.registers[d->regs.r->rs] < mips.registers[d->regs.r->rt])?1:0;
+					mips.registers[d->regs.r.rd] = (mips.registers[d->regs.r.rs] < mips.registers[d->regs.r.rt])?1:0;
                     break;
                 }
-                case default:
+                default:
 				{}
             }
             break;
@@ -555,40 +556,40 @@ int Execute(DecodedInstr *d, RegVals *rVals)
         case 0x9:   
         {
             // cout<<"addiu \t";
-			mips.registers[d->regs.i->rt] = mips.registers[d->regs.i->rs] + d->regs.i->addr_or_immed;
+			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
             break;
         }
         case 0xc:   
         {
             // cout<<"andi \t";
-			mips.registers[d->regs.i->rt] = mips.registers[d->regs.i->rs] & d->regs.i->addr_or_immed;
+			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] & d->regs.i.addr_or_immed;
             break;
         }
         case 0xd:   
         {
             // cout<<"ori \t";
-			mips.registers[d->regs.i->rt] = mips.registers[d->regs.i->rs] | d->regs.i->addr_or_immed;
+			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] | d->regs.i.addr_or_immed;
             break;
         }
         case 0xf:   
         {
             // cout<<"lui \t";
-			mips.registers[d->regs.i->rt] = d->regs.i->addr_or_immed << 16;
+			mips.registers[d->regs.i.rt] = d->regs.i.addr_or_immed << 16;
             break;
         }
         case 0x23:   
         {
             // cout<<"lw \t";
-			mips.registers[d->regs.i->rt] = mips.registers[d->regs.i->rs] + d->regs.i->addr_or_immed;
+			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
             break;
         }
         case 0x2b:   
         {
             // cout<<"sw \t";
-			mips.registers[d->regs.i->rt] = mips.registers[d->regs.i->rs] + d->regs.i->addr_or_immed;
+			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
             break;
         }
-		case default:
+		default:
 		{}
     }
 	return 0;
@@ -615,13 +616,13 @@ void UpdatePC(DecodedInstr *d, int val)
 					break;
 				}
 			}
-			mips.pc = d->regs.j->target;
+			mips.pc = d->regs.j.target;
 		}
 		case R:
 		{
 			//jr
 			if(d->funct == 0x8){
-				mips.pc = mips.registers[d->regs.r->rs];
+				mips.pc = mips.registers[d->regs.r.rs];
 			}
 		}
 		case I:
@@ -630,20 +631,20 @@ void UpdatePC(DecodedInstr *d, int val)
 				case 0x4:
 				{
 					//beq
-					if(mips.registers[d->regs.i->rt] == mips.registers[d->regs.i->rs]){
-						mips.pc = d->regs.i->addr_or_immed;
+					if(mips.registers[d->regs.i.rt] == mips.registers[d->regs.i.rs]){
+						mips.pc = d->regs.i.addr_or_immed;
 					}
 				}
 				case 0x5:
 				{
 					//bne
-					if(mips.registers[d->regs.i->rt] != mips.registers[d->regs.i->rs]){
-						mips.pc = d->regs.i->addr_or_immed;
+					if(mips.registers[d->regs.i.rt] != mips.registers[d->regs.i.rs]){
+						mips.pc = d->regs.i.addr_or_immed;
 					}
 				}
 			}
 		}
-		case default:
+		default:
 		{}
 	}
 }
@@ -666,11 +667,11 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
 			switch(d->op){
 				case 0x23:
 				{
-					mips.registers[rt] = mips.memory[rt];
+					mips.registers[d->regs.i.rt] = mips.memory[d->regs.i.rt];
 				}
 			}
 		}
-		case default:
+		default:
 		{}
 	}
 	return 0;
@@ -690,11 +691,11 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
 			switch (d->op){
 				case 0x2b:
 				{
-					mips.memory[d->regs.i->rt] = mips.registers[d->regs.i->rt];
+					mips.memory[d->regs.i.rt] = mips.registers[d->regs.i.rt];
 				}
 			}
 		}
-		case default:
+		default:
 		{}
 	}
 }
