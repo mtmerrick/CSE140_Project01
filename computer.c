@@ -338,13 +338,6 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
 			break;
 		}
 		case 0x2:   
-		{
-			//j
-			d->type = J;
-			unsigned int targ = instr << 6;
-			d->regs.j.target = targ >> 6;
-			break;
-		}
 		case 0x3:   
 		{
 			//jal
