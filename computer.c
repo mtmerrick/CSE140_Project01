@@ -417,16 +417,16 @@ void PrintInstruction(DecodedInstr *d)
 					printf("%s \t", "slt");
 					break;
 				}
-				case 0x4:
-				{
-					printf("%s \t", "beq");
-					break;
-				}
 				default:
 				{
 					// exit(1);
 				}
 			}
+			break;
+		}
+		case 0x4:
+		{
+			printf("%s \t", "beq");
 			break;
 		}
 		case 0x9:   
@@ -642,7 +642,7 @@ void UpdatePC(DecodedInstr *d, int val)
 				{
 					//beq
 					if(mips.registers[d->regs.i.rt] == mips.registers[d->regs.i.rs]){
-						mips.pc = (mips.pc & 0xf0000000) | d->regs.i.addr_or_immed;
+						mips.pc = (mips.pc & 0xf0000000) | d->regs.i.addr_or_immed << 2;
 					}
 				}
 				case 0x5:
