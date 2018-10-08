@@ -288,6 +288,9 @@ void iDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 /* Decode instr, returning decoded instruction. */
 void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVals /*register values*/)
 {
+	if (instr == 0){
+		exit(1);
+	}
 	unsigned int opcode = instr;
 	d->op = opcode >> 26;
 
