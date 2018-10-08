@@ -361,7 +361,9 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
 			iDecode (instr, d, rVals);
 		}
 		default:
-		{}
+		{
+			
+		}
 	}
 }
 
@@ -589,6 +591,11 @@ int Execute(DecodedInstr *d, RegVals *rVals)
 			return mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
             break;
         }
+		case 0x3:
+		{
+			//jal
+			return d->regs.j.target;
+		}
 		default:
 		{}
     }
