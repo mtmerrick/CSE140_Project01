@@ -708,14 +708,37 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
     {
         case R:
         {
-            mips.registers[d->regs.r.rd] = val;
-			*changedReg = d->regs.r.rd;
+			switch (d->regs.r.funct){
+				case 0x8:
+				{
+					break;
+				}
+				default:
+				{
+					mips.registers[d->regs.r.rd] = val;
+					*changedReg = d->regs.r.rd;
+				}
+			}
             break;
         }
         case I:   
         {
-			mips.registers[d->regs.i.rt] = val;
-			*changedReg = d->regs.i.rt;
+			switch (d->op){
+				case 0x8:
+				{
+					break;
+				}
+				case 0x5:
+				{
+					break;
+				}
+				default:
+				{
+					mips.registers[d->regs.i.rt] = val;
+					*changedReg = d->regs.i.rt;
+					break;
+				}
+			}
             break;
         }
         case J:   
