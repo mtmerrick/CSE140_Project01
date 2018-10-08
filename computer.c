@@ -708,7 +708,7 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
         case J:   
         {
 			if(d->op == jal){
-				mips.registers[30] = rVals->R_rt;
+				mips.registers[30] = rVals.R_rt;
 				*changedReg = 30;
 			}
             break;
