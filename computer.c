@@ -243,7 +243,7 @@ void rDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 	clone = instr;
 	clone = clone << 6;
 	d->regs.r.rs = clone >> 27;
-	rVals->R_rs = mips.registers[mips.registers[d->regs.r.rs]];
+	rVals->R_rs = mips.registers[d->regs.r.rs];
 	//rt
 	clone = instr;
 	clone = clone << 11;
