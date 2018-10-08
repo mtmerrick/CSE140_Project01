@@ -277,8 +277,8 @@ void iDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 	rVals->R_rt = mips.registers[d->regs.i.rt];
 	//imm
 	clone = instr;
-	clone = clone << 6;
-	d->regs.i.addr_or_immed = clone >> 27;
+	clone = clone << 16;
+	d->regs.i.addr_or_immed = clone >> 16;
 
 }
 
