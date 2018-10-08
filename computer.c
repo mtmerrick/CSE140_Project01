@@ -636,7 +636,7 @@ void UpdatePC(DecodedInstr *d, int val)
 		{
 			//jr
 			if(d->regs.r.funct == 0x8){
-				mips.pc = (mips.pc & 0xf0000000) | mips.registers[d->regs.r.rs] << 2;
+				mips.pc = val;
 			}
 		}
 		case I:
@@ -645,10 +645,10 @@ void UpdatePC(DecodedInstr *d, int val)
 				case 0x4:
 				{
 					//beq
-					printf("rt:%d rs:%d", d->regs.i.rt, d->regs.i.rs);
 					if(mips.registers[d->regs.i.rt] == mips.registers[d->regs.i.rs]){
 						mips.pc = mips.pc + (d->regs.i.addr_or_immed << 2);
 					}
+					break;
 				}
 				case 0x5:
 				{
@@ -656,6 +656,7 @@ void UpdatePC(DecodedInstr *d, int val)
 					if(mips.registers[d->regs.i.rt] != mips.registers[d->regs.i.rs]){
 						mips.pc = mips.pc + (d->regs.i.addr_or_immed << 2);
 					}
+					break;
 				}
 			}
 		}
