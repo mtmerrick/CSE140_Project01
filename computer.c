@@ -381,43 +381,43 @@ void PrintInstruction(DecodedInstr *d)
 			{
 				case 0x21:
 				{
-					printf("%s \t", addu);
+					printf("%s \t", "addu");
 					break;
 				}
 					
 				case 0x23:
 				{
-					printf("%s \t", subu);
+					printf("%s \t", "subu");
 					break;
 				}
 				case 0x0:
 				{
-					printf("%s \t", sll);
+					printf("%s \t", "sll");
 					break;
 				}
 				case 0x2:
 				{
-					printf("%s \t", srl);
+					printf("%s \t", "srl");
 					break;
 				}
 				case 0x24:
 				{
-					printf("%s \t", and);
+					printf("%s \t", "and");
 					break;
 				}
 				case 0x25:
 				{
-					printf("%s \t", or);
+					printf("%s \t", "or");
 					break;
 				}
 				case 0x2a:
 				{
-					printf("%s \t", slt);
+					printf("%s \t", "slt");
 					break;
 				}
 				case 0x4:
 				{
-					printf("%s \t", beq);
+					printf("%s \t", "beq");
 					break;
 				}
 				default:
@@ -427,51 +427,51 @@ void PrintInstruction(DecodedInstr *d)
 		}
 		case 0x9:   
 		{
-			printf("%s \t", addiu);
+			printf("%s \t", "addiu");
 			break;
 		}
 		case 0xc:   
 		{
-			printf("%s \t", andi);
+			printf("%s \t", "andi");
 			break;
 		}
 		case 0xd:   
 		{
-			printf("%s \t", ori);
+			printf("%s \t", "ori");
 			break;
 		}
 		case 0xf:   
 		{
-			printf("%s \t", lui);
+			printf("%s \t", "lui");
 			break;
 		}
 		case 0x23:   
 		{
-			printf("%s \t", lw);
+			printf("%s \t", "lw");
 			break;
 		}
 		case 0x2b:   
 		{
-			printf("%s \t", sw);
+			printf("%s \t", "sw");
 			break;
 		}
 		case 0x2:   
 		{
-			printf("%s \t", j);
+			printf("%s \t", "j");
 			break;
 		}
 		case 0x3:   
 		{
-			printf("%s \t", jal);
+			printf("%s \t", "jal");
 			break;
 		}
 		case 0x5:
 		{
-			printf("%s \t", bne);
+			printf("%s \t", "bne");
 		}
 		case 0x8:   
 		{
-			printf("%s \t", jr);
+			printf("%s \t", "jr");
 		}
 		default:
 		{}
@@ -521,13 +521,13 @@ int Execute(DecodedInstr *d, RegVals *rVals)
                 case 0x0:
                 {
                     // sll
-					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] << mips.registers[d->regs.r.shamt;
+					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] << mips.registers[d->regs.r.shamt];
                     break;
                 }
                 case 0x2:
                 {
                     // srl
-					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] >> mips.registers[d->regs.r.shamt;
+					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] >> mips.registers[d->regs.r.shamt];
                     break;
                 }
                 case 0x24:
