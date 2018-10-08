@@ -483,14 +483,17 @@ void PrintInstruction(DecodedInstr *d)
 		case R:
 		{
 			printf("%s%d%s%d%s%d\n", "$", d->regs.r.rd, ", $", d->regs.r.rs, ", $", d->regs.r.rt);
+			break;
 		}
 		case I:
 		{
 			printf("%s%d%s%d%s%d\n", "$", d->regs.i.rt, ", $", d->regs.i.rs, ", ", d->regs.i.addr_or_immed);
+			break;
 		}
 		case J:
 		{
 			printf("%d\n", d->regs.j.target);
+			break;
 		}
 		default:
 		{
