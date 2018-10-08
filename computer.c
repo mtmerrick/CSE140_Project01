@@ -672,10 +672,13 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
     {
         case 0x2b:
 		{
-			mips.memory[d->regs.i.rt] = mips.registers[d->regs.i.rt];
+			//sw
+			mips.memory[d->regs.i.rt] = mips.registers[val];
+			*changedMem = d->regs.i.rt;
 		}
 		case 0x23:
 		{
+			//lw
 			*changedMem = -1;
 			return mips.memory[d->regs.i.rt];
 		}
@@ -684,7 +687,7 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
 			*changedMem = -1;
 		}
 	}
-	return -1;
+	return val;
 }
 
 /* 
