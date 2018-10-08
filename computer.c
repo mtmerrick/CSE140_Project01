@@ -243,17 +243,17 @@ void rDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 	clone = instr;
 	clone = clone << 6;
 	d->regs.r.rs = clone >> 27;
-	rVals->R_rs = d->regs.r.rs;
+	rVals->R_rs = mips.registers[mips.registers[d->regs.r.rs]];
 	//rt
 	clone = instr;
 	clone = clone << 11;
 	d->regs.r.rt = clone >> 27;
-	rVals->R_rt = d->regs.r.rt;
+	rVals->R_rt = mips.registers[d->regs.r.rt];
 	//rd
 	clone = instr;
 	clone = clone << 16;
 	d->regs.r.rd = clone >> 27;
-	rVals->R_rd = d->regs.r.rd;
+	rVals->R_rd = mips.registers[d->regs.r.rd];
 	//shamt
 	clone = instr;
 	clone = clone << 21;
@@ -269,12 +269,12 @@ void iDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 	clone = instr;
 	clone = clone << 6;
 	d->regs.i.rs = clone >> 27;
-	rVals->R_rs = d->regs.i.rs;
+	rVals->R_rs = mips.registers[d->regs.i.rs];
 	//rt
 	clone = instr;
 	clone = clone << 11;
 	d->regs.i.rt = clone >> 27;
-	rVals->R_rt = d->regs.i.rt;
+	rVals->R_rt = mips.registers[d->regs.i.rt];
 	//imm
 	clone = instr;
 	clone = clone << 6;
@@ -619,11 +619,11 @@ void UpdatePC(DecodedInstr *d, int val)
 				case 0x3:   
 				{
 					//jal
-					mips.registers[30] = mips.pc;
+					mips.registers[30] = mips.pc+4;
 					break;
 				}
 			}
-			mips.pc = d->regs.j.target;
+			mips.pc = val;
 		}
 		case R:
 		{
