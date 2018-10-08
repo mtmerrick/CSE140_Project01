@@ -711,6 +711,7 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
 			switch (d->regs.r.funct){
 				case 0x8:
 				{
+					*changedReg = -1;
 					break;
 				}
 				default:
@@ -726,10 +727,12 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
 			switch (d->op){
 				case 0x8:
 				{
+					*changedReg = -1;
 					break;
 				}
 				case 0x5:
 				{
+					*changedReg = -1;
 					break;
 				}
 				default:
