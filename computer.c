@@ -508,44 +508,44 @@ int Execute(DecodedInstr *d, RegVals *rVals)
                 case 0x21:
                 {
                     // addu
-					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] + mips.registers[d->regs.r.rt];
+					return mips.registers[d->regs.r.rs] + mips.registers[d->regs.r.rt];
                     break;
                 }
                     
                 case 0x23:
                 {
                     // subu
-					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] - mips.registers[d->regs.r.rt];
+					return mips.registers[d->regs.r.rs] - mips.registers[d->regs.r.rt];
                     break;
                 }
                 case 0x0:
                 {
                     // sll
-					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] << mips.registers[d->regs.r.shamt];
+					return mips.registers[d->regs.r.rs] << mips.registers[d->regs.r.shamt];
                     break;
                 }
                 case 0x2:
                 {
                     // srl
-					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] >> mips.registers[d->regs.r.shamt];
+					return mips.registers[d->regs.r.rs] >> mips.registers[d->regs.r.shamt];
                     break;
                 }
                 case 0x24:
                 {
                     // and
-					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] & mips.registers[d->regs.r.rt];
+					return mips.registers[d->regs.r.rs] & mips.registers[d->regs.r.rt];
                     break;
                 }
                 case 0x25:
                 {
                     // or
-					mips.registers[d->regs.r.rd] = mips.registers[d->regs.r.rs] | mips.registers[d->regs.r.rt];
+					return mips.registers[d->regs.r.rs] | mips.registers[d->regs.r.rt];
                     break;
                 }
                 case 0x2a:
                 {
                     // slt
-					mips.registers[d->regs.r.rd] = (mips.registers[d->regs.r.rs] < mips.registers[d->regs.r.rt])?1:0;
+					return (mips.registers[d->regs.r.rs] < mips.registers[d->regs.r.rt])?1:0;
                     break;
                 }
                 default:
@@ -556,37 +556,37 @@ int Execute(DecodedInstr *d, RegVals *rVals)
         case 0x9:   
         {
             // addiu
-			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
+			return mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
             break;
         }
         case 0xc:   
         {
             // andi
-			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] & d->regs.i.addr_or_immed;
+			return mips.registers[d->regs.i.rs] & d->regs.i.addr_or_immed;
             break;
         }
         case 0xd:   
         {
             // ori
-			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] | d->regs.i.addr_or_immed;
+			return mips.registers[d->regs.i.rs] | d->regs.i.addr_or_immed;
             break;
         }
         case 0xf:   
         {
             // lui
-			mips.registers[d->regs.i.rt] = d->regs.i.addr_or_immed << 16;
+			return d->regs.i.addr_or_immed << 16;
             break;
         }
         case 0x23:   
         {
             // lw
-			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
+			return mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
             break;
         }
         case 0x2b:   
         {
             // sw
-			mips.registers[d->regs.i.rt] = mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
+			return mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
             break;
         }
 		default:
@@ -661,20 +661,23 @@ void UpdatePC(DecodedInstr *d, int val)
  */
 int Mem(DecodedInstr *d, int val, int *changedMem)
 {
-	switch (d->type){
-		case I:
+	switch (d->op)
+    {
+        case 0x2b:
 		{
-			switch(d->op){
-				case 0x23:
-				{
-					mips.registers[d->regs.i.rt] = mips.memory[d->regs.i.rt];
-				}
-			}
+			mips.memory[d->regs.i.rt] = mips.registers[d->regs.i.rt];
+		}
+		case 0x23:
+		{
+			*changedMem = -1;
+			return mips.memory[d->regs.i.rt];
 		}
 		default:
-		{}
+		{
+			*changedMem = -1;
+		}
 	}
-	return 0;
+	return -1;
 }
 
 /* 
@@ -685,17 +688,31 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
  */
 void RegWrite(DecodedInstr *d, int val, int *changedReg)
 {
-	switch (d->type){
-		case I:
-		{
-			switch (d->op){
-				case 0x2b:
-				{
-					mips.memory[d->regs.i.rt] = mips.registers[d->regs.i.rt];
-				}
+	switch (d->type)
+    {
+        case R:
+        {
+            mips.registers[d->regs.r.rd] = val;
+			*changedReg = d->regs.r.rd;
+            break;
+        }
+        case I:   
+        {
+			mips.registers[d->regs.i.rt] = val;
+			*changedReg = d->regs.i.rt;
+            break;
+        }
+        case J:   
+        {
+			if(d->op == jal){
+				mips.registers[30] = val;
+				*changedReg = 30;
 			}
-		}
+            break;
+        }
 		default:
-		{}
+		{
+			*changedReg = -1;
+		}
 	}
 }
