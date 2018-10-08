@@ -413,6 +413,10 @@ void PrintInstruction(DecodedInstr *d)
 					printf("%s \t", "slt");
 					break;
 				}
+				case 0x8:   
+				{
+					printf("%s \t", "jr");
+				}
 				default:
 				{
 					// exit(1);
@@ -469,10 +473,6 @@ void PrintInstruction(DecodedInstr *d)
 		{
 			printf("%s \t", "bne");
 		}
-		case 0x8:   
-		{
-			printf("%s \t", "jr");
-		}
 		default:
 		{
 			// exit(1);
@@ -487,7 +487,12 @@ void PrintInstruction(DecodedInstr *d)
 		}
 		case I:
 		{
-			printf("%s%d%s%d%s%d\n", "$", d->regs.i.rt, ", $", d->regs.i.rs, ", ", d->regs.i.addr_or_immed);
+			if(d->op == 0x4 || d->op == 0x5){
+				printf("%s%d%s%d%s%d\n", "$", d->regs.i.rs, ", $", d->regs.i.rt, ", ", d->regs.i.addr_or_immed);
+			}
+			else{
+				printf("%s%d%s%d%s%d\n", "$", d->regs.i.rt, ", $", d->regs.i.rs, ", ", d->regs.i.addr_or_immed);
+			}
 			break;
 		}
 		case J:
@@ -640,6 +645,7 @@ void UpdatePC(DecodedInstr *d, int val)
 				case 0x4:
 				{
 					//beq
+					printf("rt:%d rs:%d", d->regs.i.rt, d->regs.i.rs);
 					if(mips.registers[d->regs.i.rt] == mips.registers[d->regs.i.rs]){
 						mips.pc = mips.pc + (d->regs.i.addr_or_immed << 2);
 					}
