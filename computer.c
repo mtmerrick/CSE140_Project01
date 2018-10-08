@@ -642,14 +642,14 @@ void UpdatePC(DecodedInstr *d, int val)
 				{
 					//beq
 					if(mips.registers[d->regs.i.rt] == mips.registers[d->regs.i.rs]){
-						mips.pc = mips.pc + d->regs.i.addr_or_immed << 2;
+						mips.pc = mips.pc + (d->regs.i.addr_or_immed << 2);
 					}
 				}
 				case 0x5:
 				{
 					//bne
 					if(mips.registers[d->regs.i.rt] != mips.registers[d->regs.i.rs]){
-						mips.pc = mips.pc + d->regs.i.addr_or_immed << 2;
+						mips.pc = mips.pc + (d->regs.i.addr_or_immed << 2);
 					}
 				}
 			}
