@@ -603,7 +603,6 @@ void UpdatePC(DecodedInstr *d, int val)
 				}
 			}
 			mips->pc = d->j->target;
-			
 		}
 		case R:
 		{
