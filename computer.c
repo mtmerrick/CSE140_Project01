@@ -594,6 +594,7 @@ int Execute(DecodedInstr *d, RegVals *rVals)
 		case 0x3:
 		{
 			//jal
+			rVals->R_rt = mips.pc;
 			return d->regs.j.target;
 		}
 		default:
@@ -615,14 +616,6 @@ void UpdatePC(DecodedInstr *d, int val)
 	{
 		case J:
 		{
-			switch(d->op){
-				case 0x3:   
-				{
-					//jal
-					mips.registers[30] = mips.pc+4;
-					break;
-				}
-			}
 			mips.pc = val;
 		}
 		case R:
@@ -715,7 +708,7 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
         case J:   
         {
 			if(d->op == jal){
-				mips.registers[30] = val;
+				mips.registers[30] = rVals->R_rt;
 				*changedReg = 30;
 			}
             break;
