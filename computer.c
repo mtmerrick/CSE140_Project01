@@ -362,7 +362,7 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
 		}
 		default:
 		{
-			
+			exit(1);
 		}
 	}
 }
@@ -423,7 +423,9 @@ void PrintInstruction(DecodedInstr *d)
 					break;
 				}
 				default:
-				{}
+				{
+					exit(1);
+				}
 			}
 			break;
 		}
@@ -476,7 +478,9 @@ void PrintInstruction(DecodedInstr *d)
 			printf("%s \t", "jr");
 		}
 		default:
-		{}
+		{
+			exit(1);
+		}
 	}
 	switch(d->type)
 	{
@@ -493,7 +497,9 @@ void PrintInstruction(DecodedInstr *d)
 			printf("%d\n", d->regs.j.target);
 		}
 		default:
-		{}
+		{
+			exit(1);
+		}
 	}
 }
 
