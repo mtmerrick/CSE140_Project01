@@ -622,13 +622,13 @@ void UpdatePC(DecodedInstr *d, int val)
 	{
 		case J:
 		{
-			mips.pc = mips.pc & 0xf0000000 + val;
+			mips.pc = (mips.pc & 0xf0000000) + val;
 		}
 		case R:
 		{
 			//jr
 			if(d->regs.r.funct == 0x8){
-				mips.pc = mips.pc & 0xf0000000 + mips.registers[d->regs.r.rs];
+				mips.pc = (mips.pc & 0xf0000000) + mips.registers[d->regs.r.rs];
 			}
 		}
 		case I:
