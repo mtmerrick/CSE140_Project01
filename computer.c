@@ -40,12 +40,12 @@ int srl = 0x2;
 int and = 0x24;
 int or = 0x25;
 int slt = 0x2a;
+int jr = 0x8;
 
 
 //Global j-format
 int j = 0x2;
 int jal = 0x3;
-int jr = 0x8;
 
 /*
  *  Return an initialized computer with the stack pointer set to the
@@ -556,6 +556,11 @@ int Execute(DecodedInstr *d, RegVals *rVals)
 					return (mips.registers[d->regs.r.rs] < mips.registers[d->regs.r.rt])?1:0;
                     break;
                 }
+				case 0x8:
+				{
+					//jr
+					return mips.registers[d->regs.r.rs];
+				}
                 default:
 				{}
             }
@@ -600,8 +605,7 @@ int Execute(DecodedInstr *d, RegVals *rVals)
 		case 0x3:
 		{
 			//jal
-			rVals->R_rt = mips.pc;
-			return d->regs.j.target;
+			return mips.pc+4;
 		}
 		default:
 		{}
@@ -622,13 +626,13 @@ void UpdatePC(DecodedInstr *d, int val)
 	{
 		case J:
 		{
-			mips.pc = (mips.pc & 0xf0000000) + val;
+			mips.pc = (mips.pc & 0xf0000000) | d->regs.j.target << 2;
 		}
 		case R:
 		{
 			//jr
 			if(d->regs.r.funct == 0x8){
-				mips.pc = (mips.pc & 0xf0000000) + mips.registers[d->regs.r.rs];
+				mips.pc = (mips.pc & 0xf0000000) | mips.registers[d->regs.r.rs] << 2;
 			}
 		}
 		case I:
@@ -638,14 +642,14 @@ void UpdatePC(DecodedInstr *d, int val)
 				{
 					//beq
 					if(mips.registers[d->regs.i.rt] == mips.registers[d->regs.i.rs]){
-						mips.pc = d->regs.i.addr_or_immed;
+						mips.pc = (mips.pc & 0xf0000000) | d->regs.i.addr_or_immed;
 					}
 				}
 				case 0x5:
 				{
 					//bne
 					if(mips.registers[d->regs.i.rt] != mips.registers[d->regs.i.rs]){
-						mips.pc = d->regs.i.addr_or_immed;
+						mips.pc = (mips.pc & 0xf0000000) | d->regs.i.addr_or_immed;
 					}
 				}
 			}
@@ -714,8 +718,8 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
         case J:   
         {
 			if(d->op == jal){
-				mips.registers[30] = rVals.R_rt;
-				*changedReg = 30;
+				mips.registers[31] = val;
+				*changedReg = 31;
 			}
             break;
         }
