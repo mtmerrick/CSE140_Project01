@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 #include "computer.h"
-#include <iostream>
+// #include <iostream>
 #undef mips /* gcc already has a def for mips */
 using namespace std;
 
@@ -611,17 +611,17 @@ void UpdatePC(DecodedInstr *d, int val)
 				case 0x3:   
 				{
 					//jal
-					mips->registers[30] = mips->pc;
+					mips.registers[30] = mips.pc;
 					break;
 				}
 			}
-			mips->pc = d->regs.j->target;
+			mips.pc = d->regs.j->target;
 		}
 		case R:
 		{
 			//jr
 			if(d->funct == 0x8){
-				mips->pc = mips.registers[d->regs.r->rs];
+				mips.pc = mips.registers[d->regs.r->rs];
 			}
 		}
 		case I:
@@ -631,14 +631,14 @@ void UpdatePC(DecodedInstr *d, int val)
 				{
 					//beq
 					if(mips.registers[d->regs.i->rt] == mips.registers[d->regs.i->rs]){
-						mips->pc = d->regs.i->addr_or_immed;
+						mips.pc = d->regs.i->addr_or_immed;
 					}
 				}
 				case 0x5:
 				{
 					//bne
 					if(mips.registers[d->regs.i->rt] != mips.registers[d->regs.i->rs]){
-						mips->pc = d->regs.i->addr_or_immed;
+						mips.pc = d->regs.i->addr_or_immed;
 					}
 				}
 			}
@@ -666,7 +666,7 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
 			switch(d->op){
 				case 0x23:
 				{
-					mips->registers[rt] = mips->memory[rt];
+					mips.registers[rt] = mips.memory[rt];
 				}
 			}
 		}
@@ -690,7 +690,7 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
 			switch (d->op){
 				case 0x2b:
 				{
-					mips->memory[d->regs.i->rt] = mips->registers[d->regs.i->rt];
+					mips.memory[d->regs.i->rt] = mips.registers[d->regs.i->rt];
 				}
 			}
 		}
