@@ -358,7 +358,7 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
 		}
 		default:
 		{
-			// exit(1);
+			exit(1);
 		}
 	}
 }
@@ -502,7 +502,7 @@ void PrintInstruction(DecodedInstr *d)
 		}
 		default:
 		{
-			// exit(1);
+			exit(1);
 		}
 	}
 }
