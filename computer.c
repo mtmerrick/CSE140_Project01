@@ -203,9 +203,6 @@ void PrintInfo(int changedReg, int changedMem)
 	}
 	else if (!mips.printingMemory)
 	{
-		printf("break 3\n");
-		printf("%8.8x", changedMem);
-		printf("%8.8x", Fetch(changedMem));
 		printf("Updated memory at address %8.8x to %8.8x\n",
 			   changedMem, Fetch(changedMem));
 	}
@@ -603,7 +600,7 @@ int Execute(DecodedInstr *d, RegVals *rVals)
         case 0x23:   
         {
             // lw
-			printf("break 1\n");
+			
 			return mips.registers[d->regs.i.rs] + (d->regs.i.addr_or_immed<<2);
             break;
         }
@@ -698,11 +695,11 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
 		case 0x23:
 		{
 			//lw
-			printf("break 2: %x\t%x\t%d\n", mips.registers[29], val, d->regs.i.rt);
+			
 			*changedMem = -1;
-			printf("break 3\n");
+			
 			return mips.memory[(val - 0x00400000)>>2];
-			printf("break 4\n");
+			
 			break;
 		}
 		default:
