@@ -751,6 +751,7 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
 				mips.registers[31] = val;
 				*changedReg = 31;
 			}
+			*changedReg = -1;
             break;
         }
 		default:
