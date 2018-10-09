@@ -685,7 +685,7 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
         case 0x2b:
 		{
 			//sw
-			printf("break 1: %d\n", val);
+			printf("break 1: %d\t%d\n", val, d->regs.i.rt);
 			mips.memory[val] = mips.registers[d->regs.i.rt];
 			printf("break 2\n");
 			*changedMem = d->regs.i.rt;
