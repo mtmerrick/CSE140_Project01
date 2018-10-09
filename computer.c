@@ -357,9 +357,7 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
 			iDecode (instr, d, rVals);
 		}
 		default:
-		{
-			exit(1);
-		}
+		{}
 	}
 }
 
@@ -419,7 +417,7 @@ void PrintInstruction(DecodedInstr *d)
 				}
 				default:
 				{
-					// exit(1);
+					exit(1);
 				}
 			}
 			break;
@@ -475,7 +473,7 @@ void PrintInstruction(DecodedInstr *d)
 		}
 		default:
 		{
-			// exit(1);
+			exit(1);
 		}
 	}
 	switch(d->type)
