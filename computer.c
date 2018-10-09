@@ -186,6 +186,7 @@ void PrintInfo(int changedReg, int changedMem)
 		printf("Updated r%2.2d to %8.8x\n",
 			   changedReg, mips.registers[changedReg]);
 	}
+	printf("break 1\n");
 	else
 	{
 		for (k = 0; k < 32; k++)
