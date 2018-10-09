@@ -604,13 +604,13 @@ int Execute(DecodedInstr *d, RegVals *rVals)
         {
             // lw
 			printf("break 1\n");
-			return ((mips.registers[d->regs.i.rs] - 0x00400000)>>2) + d->regs.i.addr_or_immed;
+			return mips.registers[d->regs.i.rs] + (d->regs.i.addr_or_immed<<2);
             break;
         }
         case 0x2b:   
         {
             // sw
-			return ((mips.registers[d->regs.i.rs] - 0x00400000)>>2) + d->regs.i.addr_or_immed;
+			return mips.registers[d->regs.i.rs] + (d->regs.i.addr_or_immed<<2); d->regs.i.addr_or_immed;
             break;
         }
 		case 0x3:
@@ -690,8 +690,7 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
 		{
 			//sw
 
-			mips.memory[val] = mips.registers[d->regs.i.rt];
-			
+			mips.memory[(val - 0x00400000)>>2] = mips.registers[d->regs.i.rt];
 			*changedMem = val;
 			
 			break;
@@ -702,7 +701,7 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
 			printf("break 2: %x\t%x\t%d\n", mips.registers[29], val, d->regs.i.rt);
 			*changedMem = -1;
 			printf("break 3\n");
-			return mips.memory[val];
+			return mips.memory[(val - 0x00400000)>>2];
 			printf("break 4\n");
 			break;
 		}
