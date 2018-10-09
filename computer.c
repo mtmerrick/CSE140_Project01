@@ -278,7 +278,7 @@ void iDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 	//imm
 	clone = instr;
 	clone = clone << 16;
-	d->regs.i.addr_or_immed = clone >> 16;
+	d->regs.i.addr_or_immed = (short)clone >> 16;
 
 }
 
@@ -636,7 +636,7 @@ void UpdatePC(DecodedInstr *d, int val)
 		{
 			//jr
 			if(d->regs.r.funct == 0x8){
-				mips.pc = val;
+				mips.pc = val+4;
 			}
 		}
 		case I:
