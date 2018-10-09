@@ -685,8 +685,11 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
         case 0x2b:
 		{
 			//sw
+			printf("break 1\n");
 			mips.memory[val] = mips.registers[d->regs.i.rt];
+			printf("break 2\n");
 			*changedMem = d->regs.i.rt;
+			printf("break 3\n");
 			break;
 		}
 		case 0x23:
@@ -726,6 +729,7 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
 				{
 					mips.registers[d->regs.r.rd] = val;
 					*changedReg = d->regs.r.rd;
+					break;
 				}
 			}
             break;
@@ -740,6 +744,13 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
 				}
 				case 0x5:
 				{
+					*changedReg = -1;
+					break;
+				}
+				case 0x2b:
+				{
+					//sw
+					printf("break 4\n");
 					*changedReg = -1;
 					break;
 				}
