@@ -197,7 +197,6 @@ void PrintInfo(int changedReg, int changedMem)
 			}
 		}
 	}
-	printf("break 1\n");
 	if (!mips.printingMemory && changedMem == -1)
 	{
 		printf("No memory location was updated.\n");
@@ -205,6 +204,8 @@ void PrintInfo(int changedReg, int changedMem)
 	else if (!mips.printingMemory)
 	{
 		printf("break 3\n");
+		printf("%8.8x", changedMem);
+		printf("%8.8x", Fetch(changedMem));
 		printf("Updated memory at address %8.8x to %8.8x\n",
 			   changedMem, Fetch(changedMem));
 	}
