@@ -1,14 +1,10 @@
-// using namespace std;
 #include <stdio.h>
 #include <stdlib.h>
 #include <netinet/in.h>
 #include "computer.h"
-// #include <iostream>
 #undef mips /* gcc already has a def for mips */
 
-
 unsigned int endianSwap(unsigned int);
-
 void PrintInfo(int changedReg, int changedMem);
 unsigned int Fetch(int);
 void Decode(unsigned int, DecodedInstr *, RegVals *);
@@ -17,7 +13,6 @@ int Mem(DecodedInstr *, int, int *);
 void RegWrite(DecodedInstr *, int, int *);
 void UpdatePC(DecodedInstr *, int);
 void PrintInstruction(DecodedInstr *);
-
 /*Globally accessible Computer variable*/
 Computer mips;
 RegVals rVals;
@@ -31,7 +26,6 @@ int lw = 0x23;
 int sw = 0x2b;
 int beq = 0x4;
 int bne = 0x5;
-
 //Global r-format
 int addu = 0x21;
 int subu = 0x23;
@@ -41,8 +35,6 @@ int and = 0x24;
 int or = 0x25;
 int slt = 0x2a;
 int jr = 0x8;
-
-
 //Global j-format
 int j = 0x2;
 int jal = 0x3;
@@ -57,22 +49,17 @@ void InitComputer(FILE *filein, int printingRegisters, int printingMemory, int d
 {
 	int k;
 	unsigned int instr;
-
 	/* Initialize registers and memory */
-
 	for (k = 0; k < 32; k++)
 	{
 		mips.registers[k] = 0;
 	}
-
 	/* stack pointer - Initialize to highest address of data segment */
 	mips.registers[29] = 0x00400000 + (MAXNUMINSTRS + MAXNUMDATA) * 4;
-
 	for (k = 0; k < MAXNUMINSTRS + MAXNUMDATA; k++)
 	{
 		mips.memory[k] = 0;
 	}
-
 	k = 0;
 	while (fread(&instr, 4, 1, filein))
 	{
@@ -85,18 +72,15 @@ void InitComputer(FILE *filein, int printingRegisters, int printingMemory, int d
 			exit(1);
 		}
 	}
-
 	mips.printingRegisters = printingRegisters;
 	mips.printingMemory = printingMemory;
 	mips.interactive = interactive;
 	mips.debugging = debugging;
 }
-
 unsigned int endianSwap(unsigned int i)
 {
 	return (i >> 24) | (i >> 8 & 0x0000ff00) | (i << 8 & 0x00ff0000) | (i << 24);
 }
-
 /*
  *  Run the simulation.
  */
@@ -106,7 +90,6 @@ void Simulate()
 	unsigned int instr;
 	int changedReg = -1, changedMem = -1, val;
 	DecodedInstr d;
-
 	/* Initialize the PC to the start of the code section */
 	mips.pc = 0x00400000;
 	while (1)
@@ -120,49 +103,39 @@ void Simulate()
 				return;
 			}
 		}
-
 		/* Fetch instr at mips.pc, returning it in instr */
 		instr = Fetch(mips.pc);
-
 		printf("Executing instruction at %8.8x: %8.8x\n", mips.pc, instr);
-
-		/* 
+	/* 
 	 * Decode instr, putting decoded instr in d
 	 * Note that we reuse the d struct for each instruction.
 	 */
 		Decode(instr, &d, &rVals);
-
 		/*Print decoded instruction*/
 		PrintInstruction(&d);
-
-		/* 
+	/* 
 	 * Perform computation needed to execute d, returning computed value 
 	 * in val 
 	 */
 		val = Execute(&d, &rVals);
-
 		UpdatePC(&d, val);
-
-		/* 
+	/* 
 	 * Perform memory load or store. Place the
 	 * address of any updated memory in *changedMem, 
 	 * otherwise put -1 in *changedMem. 
 	 * Return any memory value that is read, otherwise return -1.
-		 */
+	*/
 		val = Mem(&d, val, &changedMem);
-
-		/* 
+	/* 
 	 * Write back to register. If the instruction modified a register--
 	 * (including jal, which modifies $ra) --
-		 * put the index of the modified register in *changedReg,
-		 * otherwise put -1 in *changedReg.
-		 */
+	 * put the index of the modified register in *changedReg,
+	 * otherwise put -1 in *changedReg.
+	 */
 		RegWrite(&d, val, &changedReg);
-
 		PrintInfo(changedReg, changedMem);
 	}
 }
-
 /*
  *  Print relevant information about the state of the computer.
  *  changedReg is the index of the register changed by the instruction
@@ -203,8 +176,7 @@ void PrintInfo(int changedReg, int changedMem)
 	}
 	else if (!mips.printingMemory)
 	{
-		printf("Updated memory at address %8.8x to %8.8x\n",
-			   changedMem, Fetch(changedMem));
+		printf("Updated memory at address %8.8x to %8.8x\n", changedMem, Fetch(changedMem));
 	}
 	else
 	{
@@ -279,21 +251,18 @@ void iDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 	clone = instr;
 	clone = clone << 16;
 	d->regs.i.addr_or_immed = (short)(clone >> 16);
-
 }
-
-
 
 
 /* Decode instr, returning decoded instruction. */
 void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVals /*register values*/)
 {
-	if (instr == 0){
+	if (instr == 0)
+	{
 		exit(1);
 	}
 	unsigned int opcode = instr;
 	d->op = opcode >> 26;
-
 	switch (d->op)
 	{
 		case 0x0:
@@ -301,66 +270,56 @@ void Decode(unsigned int instr /*32 bit address*/, DecodedInstr *d, RegVals *rVa
 			rDecode (instr, d, rVals);
 			break;
 		}
-		case 0x9:   
+		case 0x9://addiu
 		{
-			//addiu
 			iDecode (instr, d, rVals);
 			break;
 		}
-		case 0xc:   
+		case 0xc://andi
 		{
-			//andi
 			iDecode (instr, d, rVals);
 			break;
 		}
-		case 0xd:   
+		case 0xd://ori
 		{
-			//ori
 			iDecode (instr, d, rVals);
 			break;
 		}
-		case 0xf:   
+		case 0xf://lui
 		{
-			//lui
 			iDecode (instr, d, rVals);
 			break;
 		}
-		case 0x23:   
+		case 0x23://lw
 		{
-			//lw
 			iDecode (instr, d, rVals);
 			break;
 		}
-		case 0x2b:   
+		case 0x2b://sw
 		{
-			//sw
 			iDecode (instr, d, rVals);
 			break;
 		}
-		case 0x2:   
-		case 0x3:   
+		case 0x2://j   
+		case 0x3://jal
 		{
-			//jal
 			d->type = J;
 			unsigned int targ = instr << 6;
 			d->regs.j.target = targ >> 6;
 			break;
 		}
-		case 0x4:
+		case 0x4://beq
 		{
-			//beq
 			iDecode (instr, d, rVals);
 		}
-		case 0x5:
+		case 0x5://bne
 		{
-			//bne
 			iDecode (instr, d, rVals);
 		}
 		default:
 		{}
 	}
 }
-
 /*
  *  Print the disassembled version of the given instruction
  *  followed by a newline.
@@ -370,9 +329,8 @@ void PrintInstruction(DecodedInstr *d)
 	/* Your code goes here */
 	switch (d->op)
 	{
-		case 0x0:
+		case 0x0://r-type
 		{
-			//r-type
 			switch(d->regs.r.funct)
 			{
 				case 0x21:
@@ -380,7 +338,6 @@ void PrintInstruction(DecodedInstr *d)
 					printf("%s \t", "addu");
 					break;
 				}
-					
 				case 0x23:
 				{
 					printf("%s \t", "subu");
@@ -480,20 +437,24 @@ void PrintInstruction(DecodedInstr *d)
 	{
 		case R:
 		{
-			if(d->regs.r.funct == jr){
+			if(d->regs.r.funct == jr)
+			{
 				break;
 			}
-			else{
+			else
+			{
 				printf("%s%d%s%d%s%d\n", "$", d->regs.r.rd, ", $", d->regs.r.rs, ", $", d->regs.r.rt);
 			}
 			break;
 		}
 		case I:
 		{
-			if(d->op == 0x4 || d->op == 0x5){
+			if(d->op == 0x4 || d->op == 0x5)
+			{
 				printf("%s%d%s%d%s%d\n", "$", d->regs.i.rs, ", $", d->regs.i.rt, ", ", d->regs.i.addr_or_immed);
 			}
-			else{
+			else
+			{
 				printf("%s%d%s%d%s%d\n", "$", d->regs.i.rt, ", $", d->regs.i.rs, ", ", d->regs.i.addr_or_immed);
 			}
 			break;
@@ -514,113 +475,94 @@ void PrintInstruction(DecodedInstr *d)
 int Execute(DecodedInstr *d, RegVals *rVals)
 {
 	switch (d->op)
-    {
-        case 0x0:
-        {
-            //r-type
-            switch(d->regs.r.funct)
-            {
-                case 0x21:
-                {
-                    // addu
-					return mips.registers[d->regs.r.rs] + mips.registers[d->regs.r.rt];
-                    break;
-                }
-                    
-                case 0x23:
-                {
-                    // subu
-					return mips.registers[d->regs.r.rs] - mips.registers[d->regs.r.rt];
-                    break;
-                }
-                case 0x0:
-                {
-                    // sll
-					return mips.registers[d->regs.r.rs] << mips.registers[d->regs.r.shamt];
-                    break;
-                }
-                case 0x2:
-                {
-                    // srl
-					return mips.registers[d->regs.r.rs] >> mips.registers[d->regs.r.shamt];
-                    break;
-                }
-                case 0x24:
-                {
-                    // and
-					return mips.registers[d->regs.r.rs] & mips.registers[d->regs.r.rt];
-                    break;
-                }
-                case 0x25:
-                {
-                    // or
-					return mips.registers[d->regs.r.rs] | mips.registers[d->regs.r.rt];
-                    break;
-                }
-                case 0x2a:
-                {
-                    // slt
-					return (mips.registers[d->regs.r.rs] < mips.registers[d->regs.r.rt])?1:0;
-                    break;
-                }
-				case 0x8:
+	{
+		case 0x0://r-type
+		{
+			switch(d->regs.r.funct)
+			{
+				case 0x21:// addu
 				{
-					//jr
+					return mips.registers[d->regs.r.rs] + mips.registers[d->regs.r.rt];
+					break;
+				} 
+				case 0x23:// subu
+				{
+					return mips.registers[d->regs.r.rs] - mips.registers[d->regs.r.rt];
+					break;
+				}
+				case 0x0:// sll
+				{
+					return mips.registers[d->regs.r.rs] << mips.registers[d->regs.r.shamt];
+					break;
+				}
+				case 0x2:// srl
+				{
+					return mips.registers[d->regs.r.rs] >> mips.registers[d->regs.r.shamt];
+					break;
+				}
+				case 0x24:// and
+				{
+					return mips.registers[d->regs.r.rs] & mips.registers[d->regs.r.rt];
+					break;
+				}
+				case 0x25:// or
+				{
+					return mips.registers[d->regs.r.rs] | mips.registers[d->regs.r.rt];
+					break;
+				}
+				case 0x2a:// slt
+				{
+					return (mips.registers[d->regs.r.rs] < mips.registers[d->regs.r.rt])?1:0;
+					break;
+				}
+				case 0x8://jr
+				{
 					return mips.registers[d->regs.r.rs];
 				}
-                default:
+				default:
 				{}
-            }
-            break;
-        }
-        case 0x9:   
-        {
-            // addiu
-			return mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
-            break;
-        }
-        case 0xc:   
-        {
-            // andi
-			return mips.registers[d->regs.i.rs] & d->regs.i.addr_or_immed;
-            break;
-        }
-        case 0xd:   
-        {
-            // ori
-			return mips.registers[d->regs.i.rs] | d->regs.i.addr_or_immed;
-            break;
-        }
-        case 0xf:   
-        {
-            // lui
-			return d->regs.i.addr_or_immed << 16;
-            break;
-        }
-        case 0x23:   
-        {
-            // lw
-			
-			return mips.registers[d->regs.i.rs] + (d->regs.i.addr_or_immed<<2);
-            break;
-        }
-        case 0x2b:   
-        {
-            // sw
-			return mips.registers[d->regs.i.rs] + (d->regs.i.addr_or_immed<<2);
-            break;
-        }
-		case 0x3:
+			}
+			break;
+		}
+		case 0x9:// addiu
 		{
-			//jal
+			return mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
+			break;
+		}
+		case 0xc:// andi
+		{
+			return mips.registers[d->regs.i.rs] & d->regs.i.addr_or_immed;
+			break;
+		}
+		case 0xd:// ori
+		{
+			return mips.registers[d->regs.i.rs] | d->regs.i.addr_or_immed;
+			break;
+		}
+		case 0xf:// lui
+		{
+			return d->regs.i.addr_or_immed << 16;
+			break;
+		}
+		case 0x23:// lw
+		{
+			return mips.registers[d->regs.i.rs] + (d->regs.i.addr_or_immed<<2);
+			break;
+		}
+		case 0x2b:// sw
+		{
+			return mips.registers[d->regs.i.rs] + (d->regs.i.addr_or_immed<<2);
+			break;
+		}
+		case 0x3://jal
+		{
 			return mips.pc+4;
 		}
 		default:
 		{}
-    }
+	}
 	return 0;
 }
-
 /* 
  * Update the program counter based on the current instruction. For
  * instructions other than branches and jumps, for example, the PC
@@ -636,9 +578,8 @@ void UpdatePC(DecodedInstr *d, int val)
 		{
 			mips.pc = (mips.pc & 0xf0000000) | d->regs.j.target << 2;
 		}
-		case R:
+		case R://jr
 		{
-			//jr
 			if(d->regs.r.funct == 0x8){
 				mips.pc = val+4;
 			}
@@ -646,18 +587,18 @@ void UpdatePC(DecodedInstr *d, int val)
 		case I:
 		{
 			switch(d->op){
-				case 0x4:
+				case 0x4://beq
 				{
-					//beq
-					if(mips.registers[d->regs.i.rt] == mips.registers[d->regs.i.rs]){
+					if(mips.registers[d->regs.i.rt] == mips.registers[d->regs.i.rs])
+					{
 						mips.pc = mips.pc + (d->regs.i.addr_or_immed << 2);
 					}
 					break;
 				}
-				case 0x5:
+				case 0x5://bne
 				{
-					//bne
-					if(mips.registers[d->regs.i.rt] != mips.registers[d->regs.i.rs]){
+					if(mips.registers[d->regs.i.rt] != mips.registers[d->regs.i.rs])
+					{
 						mips.pc = mips.pc + (d->regs.i.addr_or_immed << 2);
 					}
 					break;
@@ -668,7 +609,6 @@ void UpdatePC(DecodedInstr *d, int val)
 		{}
 	}
 }
-
 /*
  * Perform memory load or store. Place the address of any updated memory 
  * in *changedMem, otherwise put -1 in *changedMem. Return any memory value 
@@ -682,24 +622,17 @@ void UpdatePC(DecodedInstr *d, int val)
 int Mem(DecodedInstr *d, int val, int *changedMem)
 {
 	switch (d->op)
-    {
-        case 0x2b:
+	{
+		case 0x2b://sw
 		{
-			//sw
-
 			mips.memory[(val - 0x00400000)>>2] = mips.registers[d->regs.i.rt];
 			*changedMem = val;
-			
 			break;
 		}
-		case 0x23:
+		case 0x23://lw
 		{
-			//lw
-			
 			*changedMem = -1;
-			
 			return mips.memory[(val - 0x00400000)>>2];
-			
 			break;
 		}
 		default:
@@ -709,7 +642,6 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
 	}
 	return val;
 }
-
 /* 
  * Write back to register. If the instruction modified a register--
  * (including jal, which modifies $ra) --
@@ -719,9 +651,9 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
 void RegWrite(DecodedInstr *d, int val, int *changedReg)
 {
 	switch (d->type)
-    {
-        case R:
-        {
+	{
+		case R:
+		{
 			switch (d->regs.r.funct){
 				case 0x8:
 				{
@@ -735,10 +667,10 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
 					break;
 				}
 			}
-            break;
-        }
-        case I:   
-        {
+			break;
+		}
+		case I:   
+		{
 			switch (d->op){
 				case 0x8:
 				{
@@ -750,9 +682,8 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
 					*changedReg = -1;
 					break;
 				}
-				case 0x2b:
+				case 0x2b://sw
 				{
-					//sw
 					*changedReg = -1;
 					break;
 				}
@@ -763,17 +694,17 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
 					break;
 				}
 			}
-            break;
-        }
-        case J:   
-        {
+			break;
+		}
+		case J:   
+		{
 			if(d->op == jal){
 				mips.registers[31] = val;
 				*changedReg = 31;
 			}
 			*changedReg = -1;
-            break;
-        }
+			break;
+		}
 		default:
 		{
 			*changedReg = -1;
