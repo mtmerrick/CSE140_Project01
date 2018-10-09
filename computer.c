@@ -481,7 +481,7 @@ void PrintInstruction(DecodedInstr *d)
 		case R:
 		{
 			if(d->regs.r.funct == jr){
-				printf("$%d\n", d->regs.r.rs)
+				printf("$%d\n", d->regs.r.rs);
 			}
 			else{
 				printf("%s%d%s%d%s%d\n", "$", d->regs.r.rd, ", $", d->regs.r.rs, ", $", d->regs.r.rt);
