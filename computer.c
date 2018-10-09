@@ -278,7 +278,7 @@ void iDecode(unsigned int instr, DecodedInstr *d, RegVals *rVals)
 	//imm
 	clone = instr;
 	clone = clone << 16;
-	d->regs.i.addr_or_immed = (short)clone >> 16;
+	d->regs.i.addr_or_immed = (short)(clone >> 16);
 
 }
 
