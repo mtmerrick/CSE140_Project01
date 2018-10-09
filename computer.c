@@ -200,7 +200,6 @@ void PrintInfo(int changedReg, int changedMem)
 	printf("break 1\n");
 	if (!mips.printingMemory && changedMem == -1)
 	{
-		printf("break 2\n");
 		printf("No memory location was updated.\n");
 	}
 	else if (!mips.printingMemory)
@@ -692,7 +691,7 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
 
 			mips.memory[val] = mips.registers[d->regs.i.rt];
 			
-			*changedMem = d->regs.i.rt;
+			*changedMem = val;
 			
 			break;
 		}
