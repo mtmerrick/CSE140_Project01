@@ -687,12 +687,14 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
 			//sw
 			mips.memory[d->regs.i.rt] = mips.registers[val];
 			*changedMem = d->regs.i.rt;
+			break;
 		}
 		case 0x23:
 		{
 			//lw
 			*changedMem = -1;
 			return mips.memory[d->regs.i.rt];
+			break;
 		}
 		default:
 		{
