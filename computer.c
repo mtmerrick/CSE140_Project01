@@ -600,6 +600,7 @@ int Execute(DecodedInstr *d, RegVals *rVals)
         case 0x23:   
         {
             // lw
+			printf("break 1\n");
 			return ((mips.registers[d->regs.i.rs] - 0x00400000)>>2) + d->regs.i.addr_or_immed;
             break;
         }
@@ -695,11 +696,11 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
 		case 0x23:
 		{
 			//lw
-			printf("break 1: %x\t%x\t%d\n", mips.registers[29], val, d->regs.i.rt);
+			printf("break 2: %x\t%x\t%d\n", mips.registers[29], val, d->regs.i.rt);
 			*changedMem = -1;
-			printf("break 2\n");
-			return mips.memory[val];
 			printf("break 3\n");
+			return mips.memory[val];
+			printf("break 4\n");
 			break;
 		}
 		default:
@@ -753,7 +754,6 @@ void RegWrite(DecodedInstr *d, int val, int *changedReg)
 				case 0x2b:
 				{
 					//sw
-					printf("break 4\n");
 					*changedReg = -1;
 					break;
 				}
