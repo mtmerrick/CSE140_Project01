@@ -600,13 +600,13 @@ int Execute(DecodedInstr *d, RegVals *rVals)
         case 0x23:   
         {
             // lw
-			return (mips.registers[d->regs.i.rs]>>2) + d->regs.i.addr_or_immed - 0x004000;
+			return ((mips.registers[d->regs.i.rs] - 0x004000)>>2) + d->regs.i.addr_or_immed;
             break;
         }
         case 0x2b:   
         {
             // sw
-			return (mips.registers[d->regs.i.rs]>>2) + d->regs.i.addr_or_immed - 0x004000;
+			return ((mips.registers[d->regs.i.rs] - 0x004000)>>2) + d->regs.i.addr_or_immed;
             break;
         }
 		case 0x3:
