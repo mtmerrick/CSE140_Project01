@@ -186,7 +186,6 @@ void PrintInfo(int changedReg, int changedMem)
 		printf("Updated r%2.2d to %8.8x\n",
 			   changedReg, mips.registers[changedReg]);
 	}
-	printf("break 1\n");
 	else
 	{
 		for (k = 0; k < 32; k++)
@@ -198,6 +197,7 @@ void PrintInfo(int changedReg, int changedMem)
 			}
 		}
 	}
+	printf("break 1\n");
 	if (!mips.printingMemory && changedMem == -1)
 	{
 		printf("No memory location was updated.\n");
