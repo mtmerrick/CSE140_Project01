@@ -685,7 +685,7 @@ int Mem(DecodedInstr *d, int val, int *changedMem)
         case 0x2b:
 		{
 			//sw
-			mips.memory[d->regs.i.rt] = mips.registers[val];
+			mips.memory[val] = mips.registers[d->regs.i.rt];
 			*changedMem = d->regs.i.rt;
 			break;
 		}
