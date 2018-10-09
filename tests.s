@@ -8,10 +8,11 @@
 	ori	$a1, $a0, 0
 	lui	$a1, 3
 	slt	$a1, $a0, $0
-	sw	$a0, 0($sp)
-	addiu	$sp, $sp, 4
-	lw	$a0, -4($sp)
 	addiu	$sp, $sp, -4
+	sw	$a0, -4($sp)
+	#addiu	$sp, $sp, -4
+	lw	$a0, -4($sp)
+	addiu	$sp, $sp, 4
 	jal	Mystery
 	addi	$0, $0, 0 #unsupported instruction, terminate
 
