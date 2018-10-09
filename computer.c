@@ -413,7 +413,7 @@ void PrintInstruction(DecodedInstr *d)
 				}
 				case 0x8:   
 				{
-					printf("%s \t", "jr");
+					printf("%s \t$%d\n", "jr", d->regs.r.rs);
 				}
 				default:
 				{
@@ -481,7 +481,7 @@ void PrintInstruction(DecodedInstr *d)
 		case R:
 		{
 			if(d->regs.r.funct == jr){
-				printf("$%d\n", d->regs.r.rs);
+				break;
 			}
 			else{
 				printf("%s%d%s%d%s%d\n", "$", d->regs.r.rd, ", $", d->regs.r.rs, ", $", d->regs.r.rt);
