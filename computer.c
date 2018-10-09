@@ -606,7 +606,7 @@ int Execute(DecodedInstr *d, RegVals *rVals)
         case 0x2b:   
         {
             // sw
-			return mips.registers[d->regs.i.rs] + d->regs.i.addr_or_immed;
+			return mips.registers[d->regs.i.rs] + (d->regs.i.addr_or_immed / 4) - 0x00400000;
             break;
         }
 		case 0x3:
